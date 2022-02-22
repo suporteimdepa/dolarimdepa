@@ -11,6 +11,7 @@ function debug_to_console($data) {
 }
 
 $today = date("d-m");
+
 $dataFeriados = array("01-01", "15-04", "21-04", "01-05", "16-06", "07-09", "12-10", "28-10", "02-11", "15-11", "25-12");
 
 $verificaDataFeriado = function($arrayFeriados, $dataHoje){
