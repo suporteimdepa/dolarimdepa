@@ -37,9 +37,16 @@ echo "<br>";
         return floatval($val);
     }
 
+    function copyJson($newName){
+        if (!copy("dolar.json", $newName)) {
+            debug_to_console("Falha ao gravar arquivo de backup");
+        }
+    }
+
     debug_to_console("Verificando data...");
 
     if ($verificaDataFeriado($dataFeriados,$today) == false) {
+        copyJson("dolar.json.bak");
         debug_to_console("Adicionando...");
 
         $today = date("m-d-Y");
@@ -69,6 +76,9 @@ echo "<br>";
               file_put_contents('dolar.json', $jsonData);
               debug_to_console("Registro adicionado com sucesso!");
         }
+
+        copyJson("dolar.json.updated.bak");
+        
     } else {
         debug_to_console("Hoje é feriado! :D");
     }
