@@ -2,7 +2,7 @@
 
 $str = file_get_contents('dolar.json');
 $json = json_decode($str, true, JSON_NUMERIC_CHECK);
-
+//teste
 
 if (isset($_GET['ano'])) {
 
