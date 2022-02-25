@@ -1,25 +1,11 @@
 <?php
+// ###  VARIVAEIS
+$str        = file_get_contents('dolar.json');
+$json       = json_decode($str, true, JSON_NUMERIC_CHECK);
+$totalItens = count($json);
 
-$str = file_get_contents('dolar.json');
-$json = json_decode($str, true, JSON_NUMERIC_CHECK);
-
-if (isset($_GET['ano'])) {
-
-    $AdditionalArray = array(
-        'ano' => $_GET['ano'],
-        'mes' => $_GET['mes'],
-        'dia' => $_GET['dia'],
-        'valor' => $_GET['valor']
-    );
-    //append additional json to json file
-    $json[] = $AdditionalArray;
-    $jsonData = json_encode($json);
-
-    file_put_contents('dolar.json', $jsonData);
-}
-
-function mediaMes($ano, $mes, $array)
-{
+// ###  FUNÇÕES
+function mediaMes($ano, $mes, $array){
     $total = 0;
     $total_dias = 0;
     foreach ($array as $cotacao) {
@@ -33,33 +19,11 @@ function mediaMes($ano, $mes, $array)
     if (isset($media)) {
         return number_format($media, 4, ',', '');
     } else {
-        return 0;
+        return "";
     }
 }
 
-$totalItens = 0;
-foreach ($json as $cotacao) {
-    $totalItens++;
-}
-
-$meses = array(
-    1 => 'Janeiro',
-    'Fevereiro',
-    'Março',
-    'Abril',
-    'Maio',
-    'Junho',
-    'Julho',
-    'Agosto',
-    'Setembro',
-    'Outubro',
-    'Novembro',
-    'Dezembro'
-);
-
-
-function convertMonthToNumber($monthName)
-{
+function convertMonthToNumber($monthName){
     if ($monthName == "Janeiro") {
         $monthName = "January";
     }
@@ -98,11 +62,26 @@ function convertMonthToNumber($monthName)
     }
     return date('m', strtotime($monthName));
 }
-//echo '<pre>';
-//print_r($json);
-//echo '</pre>';
 
-// Declare month number and initialize it
+
+// ## ARRAY MESES
+$meses = array(
+    1 => 'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro'
+);
+
+
+
 
 
 ?>
@@ -121,8 +100,8 @@ function convertMonthToNumber($monthName)
 
     <!-- Bootstrap -->
     <!-- JavaScript Bundle with Popper -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
@@ -130,7 +109,7 @@ function convertMonthToNumber($monthName)
         body {
             background-color: #FFFFFF;
             font-family: 'Inter';
-            font-size: 14px;
+            font-size: 16px;
             margin: 0;
             padding: 0;
         }
@@ -149,10 +128,32 @@ function convertMonthToNumber($monthName)
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach (array_reverse(array_slice($json, -30, $totalItens)) as $cotacao) : ?>
+                        <?php foreach (array_reverse(array_slice($json, -30, $totalItens)) as $cotacao) :
+                            $dia = $cotacao['dia'];
+                            $mes = convertMonthToNumber($cotacao['mes']);
+                            $ano = $cotacao['ano'];
+                            $dataAtual = $dia . "/" . $mes . "/" . $ano;
+                            ?>
+                            
                             <tr>
-                                <td> <?php echo $cotacao['dia'] . "/" . convertMonthToNumber($cotacao['mes']) . "/" . $cotacao['ano']; ?> </td>
-                                <td> <?php printf("%.4f", $cotacao['valor']) ?> </td>
+                                <td> <?php 
+                                        if(date("d/m/Y") == $dataAtual) {
+                                            echo "<h5><b>" . $dataAtual . "</b></h5>";
+                                        } else {
+                                            echo $dataAtual;
+                                        }
+                                    ?>
+                                </td>
+                                <td> <?php 
+                                        if(date("d/m/Y") == $dataAtual) {
+                                            echo "<b><h5>";
+                                            printf("%.4f", $cotacao['valor']);
+                                            echo "</b></h5>";
+                                        } else {
+                                            printf("%.4f", $cotacao['valor']);
+                                        }
+                                    ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -164,23 +165,18 @@ function convertMonthToNumber($monthName)
                     <thead>
                         <tr>
                             <th>Mês</th>
+                            <th><?php echo date("Y") - 2; ?></th>
                             <th><?php echo date("Y") - 1; ?></th>
                             <th><?php echo date("Y"); ?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($meses as $mesAtual) : ?>
+                        <?php foreach ($meses as $mes) : ?>
                             <tr>
-                                <td><?php echo $mesAtual ?></td>
-                                <td>
-                                    <?php
-                                    echo mediaMes(date("Y") - 1, $mesAtual, $json);
-                                    ?></td>
-                                <td>
-                                    <?php
-                                    echo mediaMes(date("Y"), $mesAtual, $json);
-                                    ?>
-                                </td>
+                                <td> <?php echo $mes ?></td>
+                                <td> <?php echo mediaMes(date("Y") - 2, $mes, $json); ?> </td>
+                                <td> <?php echo mediaMes(date("Y") - 1, $mes, $json); ?> </td>
+                                <td> <?php echo mediaMes(date("Y"), $mes, $json); ?> </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
