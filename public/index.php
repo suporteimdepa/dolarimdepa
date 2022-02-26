@@ -8,15 +8,18 @@ foreach ($envs as $key => $value) {
 
 echo $_ENV["mysql_host"];
 echo "<br>";
-echo getenv('URL_DB');
-echo "<br>";
-echo $_ENV["mysql_login"];
+$URL_DB = getenv('URL_DB');
+
 
 
 setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 date_default_timezone_set('America/Sao_Paulo');
 
-$conn = new mysqli("dcrhg4kh56j13bnu.cbetxkdyhwsb.us-east-1.rds.amazonaws.com", "xx8yebzvs2xsadnv", "ru6yr3vnz3owquus", "ef3dlqv50o99cxud");
+//PRODUCAO-LOCAL
+//$conn = new mysqli("dcrhg4kh56j13bnu.cbetxkdyhwsb.us-east-1.rds.amazonaws.com", "xx8yebzvs2xsadnv", "ru6yr3vnz3owquus", "ef3dlqv50o99cxud");
+
+//PRODUCAO-HEROKU
+$conn = new mysqli($URL_DB, "xx8yebzvs2xsadnv", "ru6yr3vnz3owquus", "ef3dlqv50o99cxud");
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
