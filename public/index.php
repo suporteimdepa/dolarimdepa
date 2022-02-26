@@ -6,20 +6,25 @@ foreach ($envs as $key => $value) {
     $_ENV[$key] = $value;
 }
 
-echo $_ENV["mysql_host"];
-echo "<br>";
-$URL_DB = getenv('URL_DB');
+$L_URL_DB = $_ENV['URL_DB'];
+$L_USER_DB = $_ENV['USER_DB'];
+$L_PASS_DB = $_ENV['PASS_DB'];
+$L_TABLE_DB = $_ENV['TABLE_DB'];
 
+$URL_DB = getenv('URL_DB');
+$USER_DB = getenv('USER_DB');
+$PASS_DB = getenv('PASS_DB');
+$TABLE_DB = getenv('TABLE_DB');
 
 
 setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 date_default_timezone_set('America/Sao_Paulo');
 
 //PRODUCAO-LOCAL
-//$conn = new mysqli("dcrhg4kh56j13bnu.cbetxkdyhwsb.us-east-1.rds.amazonaws.com", "xx8yebzvs2xsadnv", "ru6yr3vnz3owquus", "ef3dlqv50o99cxud");
+//$conn = new mysqli($L_URL_DB, $L_USER_DB, $L_PASS_DB, $L_TABLE_DB);
 
-//PRODUCAO-HEROKU
-$conn = new mysqli($URL_DB, "xx8yebzvs2xsadnv", "ru6yr3vnz3owquus", "ef3dlqv50o99cxud");
+//PRODUCAO-nuvem
+$conn = new mysqli($URL_DB, $USER_DB, $PASS_DB, $TABLE_DB);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
