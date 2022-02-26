@@ -1,4 +1,10 @@
 <?php
+$conn = new mysqli("dcrhg4kh56j13bnu.cbetxkdyhwsb.us-east-1.rds.amazonaws.com", "xx8yebzvs2xsadnv", "ru6yr3vnz3owquus", "ef3dlqv50o99cxud");
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
 error_reporting(E_ALL);
 setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
 date_default_timezone_set('America/Sao_Paulo');
@@ -46,7 +52,6 @@ echo "<br>";
     debug_to_console("Verificando data...");
 
     if ($verificaDataFeriado($dataFeriados,$today) == false) {
-        copyJson("dolar.json.bak");
         debug_to_console("Adicionando...");
 
         $today = date("m-d-Y");
@@ -58,26 +63,20 @@ echo "<br>";
 
         //encode para UTF8(joga a primeira letra para maiscula(Nome completo do mês, baseado no idioma))
 
-        $mesNomeAtual = utf8_encode(ucwords(strftime('%B'))); 
+        $mesNomeAtual = utf8_encode(ucwords(strftime('%B')));
 
-        $str = file_get_contents('dolar.json');
-        $json = json_decode($str,true);
+        $ano = date("Y");
+        $mes = $mesNomeAtual;
+        $dia = date("d");
+        $valor = round($usdptax, 4);
 
-        if(isset($usdptax)){
-            $AdditionalArray = array(
-                'ano' => date("Y") ,
-                'mes' => $mesNomeAtual ,
-                'dia' => date("d") ,
-                'valor' => round($usdptax, 4)
-                );
-              $json[]=$AdditionalArray;
-              $jsonData = json_encode($json);
+        $sql = "INSERT INTO dolar (list_ano, list_mes, list_dia, list_valor) VALUES ($ano, '$mes', $dia, $valor)";
 
-              file_put_contents('dolar.json', $jsonData);
-              debug_to_console("Registro adicionado com sucesso!");
-        }
-
-        copyJson("dolar.json.updated.bak");
+        if ($conn->query($sql) === TRUE) {
+            echo "New record created successfully";
+          } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+          }
         
     } else {
         debug_to_console("Hoje é feriado! :D");

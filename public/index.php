@@ -1,16 +1,48 @@
 <?php
+
+$envs = parse_ini_file('../foo.env');
+
+foreach ($envs as $key => $value) {
+    $_ENV[$key] = $value;
+}
+
+echo $_ENV["mysql_host"];
+echo "<br>";
+echo getenv('URL_DB');
+echo "<br>";
+echo $_ENV["mysql_login"];
+
+
+setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+date_default_timezone_set('America/Sao_Paulo');
+
+$conn = new mysqli("dcrhg4kh56j13bnu.cbetxkdyhwsb.us-east-1.rds.amazonaws.com", "xx8yebzvs2xsadnv", "ru6yr3vnz3owquus", "ef3dlqv50o99cxud");
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM dolar";
+$result = $conn->query($sql);
+
+$dbarray = array();
+while ($row = mysqli_fetch_assoc($result)) {
+    $dbarray[] = $row;
+}
+
+
 // ###  VARIVAEIS
-$str        = file_get_contents('dolar.json');
-$json       = json_decode($str, true, JSON_NUMERIC_CHECK);
-$totalItens = count($json);
+//$str        = file_get_contents('dolar.json');
+//$json       = json_decode($str, true, JSON_NUMERIC_CHECK);
+$totalItens = count($dbarray);
 
 // ###  FUNÇÕES
 function mediaMes($ano, $mes, $array){
     $total = 0;
     $total_dias = 0;
     foreach ($array as $cotacao) {
-        if ($cotacao['mes'] == $mes and $cotacao['ano'] == $ano) {
-            $total = $total + $cotacao['valor'];
+        if ($cotacao['list_mes'] == $mes and $cotacao['list_ano'] == $ano) {
+            $total = $total + $cotacao['list_valor'];
             $total_dias++;
             $media = $total / $total_dias;
         }
@@ -128,11 +160,12 @@ $meses = array(
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach (array_reverse(array_slice($json, -30, $totalItens)) as $cotacao) :
-                            $dia = $cotacao['dia'];
-                            $mes = convertMonthToNumber($cotacao['mes']);
-                            $ano = $cotacao['ano'];
+                        <?php foreach (array_reverse(array_slice($dbarray, -30, $totalItens)) as $cotacao) :
+                            $dia = $cotacao['list_dia'];
+                            $mes = convertMonthToNumber($cotacao['list_mes']);
+                            $ano = $cotacao['list_ano'];
                             $dataAtual = $dia . "/" . $mes . "/" . $ano;
+                            $valor = $cotacao['list_valor'];
                             ?>
                             
                             <tr>
@@ -147,10 +180,10 @@ $meses = array(
                                 <td> <?php 
                                         if(date("d/m/Y") == $dataAtual) {
                                             echo "<b><h5>";
-                                            printf("%.4f", $cotacao['valor']);
+                                            printf("%.4f", $valor);
                                             echo "</b></h5>";
                                         } else {
-                                            printf("%.4f", $cotacao['valor']);
+                                            printf("%.4f", $valor);
                                         }
                                     ?>
                                 </td>
@@ -174,11 +207,11 @@ $meses = array(
                         <?php foreach ($meses as $mes) : ?>
                             <tr>
                                 <td> <?php echo $mes ?></td>
-                                <td> <?php echo mediaMes(date("Y") - 2, $mes, $json); ?> </td>
-                                <td> <?php echo mediaMes(date("Y") - 1, $mes, $json); ?> </td>
-                                <td> <?php echo mediaMes(date("Y"), $mes, $json); ?> </td>
+                                <td> <?php echo mediaMes(date("Y") - 2, $mes, $dbarray); ?> </td>
+                                <td> <?php echo mediaMes(date("Y") - 1, $mes, $dbarray); ?> </td>
+                                <td> <?php echo mediaMes(date("Y"), $mes, $dbarray); ?> </td>
                             </tr>
-                        <?php endforeach; ?>
+                        <?php endforeach; $conn->close(); ?>
                     </tbody>
                 </table>
                 <p class="text-center">Dados atualizados automaticamente às 13:25</p>
