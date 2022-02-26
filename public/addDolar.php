@@ -1,5 +1,26 @@
 <?php
-$conn = new mysqli("dcrhg4kh56j13bnu.cbetxkdyhwsb.us-east-1.rds.amazonaws.com", "xx8yebzvs2xsadnv", "ru6yr3vnz3owquus", "ef3dlqv50o99cxud");
+
+$envs = parse_ini_file('../foo.env');
+
+foreach ($envs as $key => $value) {
+    $_ENV[$key] = $value;
+}
+
+$L_URL_DB = $_ENV['URL_DB'];
+$L_USER_DB = $_ENV['USER_DB'];
+$L_PASS_DB = $_ENV['PASS_DB'];
+$L_TABLE_DB = $_ENV['TABLE_DB'];
+
+$URL_DB = getenv('URL_DB');
+$USER_DB = getenv('USER_DB');
+$PASS_DB = getenv('PASS_DB');
+$TABLE_DB = getenv('TABLE_DB');
+
+//PRODUCAO-LOCAL
+//$conn = new mysqli($L_URL_DB, $L_USER_DB, $L_PASS_DB, $L_TABLE_DB);
+
+//PRODUCAO-nuvem
+$conn = new mysqli($URL_DB, $USER_DB, $PASS_DB, $TABLE_DB);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
