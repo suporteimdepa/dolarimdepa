@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+date_default_timezone_set('America/Sao_Paulo');
 
 $envs = parse_ini_file('../foo.env');
 
@@ -26,9 +29,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-error_reporting(E_ALL);
-setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
-date_default_timezone_set('America/Sao_Paulo');
+
 
 function debug_to_console($data) {
     $output = $data;

@@ -58,8 +58,6 @@ function mediaMes($ano, $mes, $array){
 
     if (isset($media)) {
         return number_format($media, 4, ',', '');
-    } else {
-        return "";
     }
 }
 
@@ -178,15 +176,15 @@ $meses = array(
                             
                             <tr>
                                 <td> <?php 
-                                        if(date("d/m/Y") == $dataAtual) {
-                                            echo "<h5><b>" . $dataAtual . "</b></h5>";
+                                        if(date("j/m/Y") == $dataAtual) {
+                                            echo "<h5><b>". $dataAtual . "</b></h5>";
                                         } else {
                                             echo $dataAtual;
                                         }
                                     ?>
                                 </td>
                                 <td> <?php 
-                                        if(date("d/m/Y") == $dataAtual) {
+                                        if(date("j/m/Y") == $dataAtual) {
                                             echo "<b><h5>";
                                             printf("%.4f", $valor);
                                             echo "</b></h5>";
