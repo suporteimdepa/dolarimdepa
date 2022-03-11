@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
-setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
-date_default_timezone_set('America/Sao_Paulo');
+//setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+//date_default_timezone_set('America/Sao_Paulo');
 
 $envs = parse_ini_file('../foo.env');
 
@@ -85,7 +85,7 @@ echo "<br>";
 
         //encode para UTF8(joga a primeira letra para maiscula(Nome completo do mês, baseado no idioma))
 
-        $mesNomeAtual = utf8_encode(ucwords(strftime('%B')));
+        $mesNomeAtual = ucwords(strftime('%B'));
 
         $ano = date("Y");
         $mes = $mesNomeAtual;
