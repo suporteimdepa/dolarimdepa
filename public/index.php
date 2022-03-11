@@ -1,4 +1,6 @@
 <?php
+setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+date_default_timezone_set('America/Sao_Paulo');
 
 $envs = parse_ini_file('../foo.env');
 
@@ -17,8 +19,7 @@ $PASS_DB = getenv('PASS_DB');
 $TABLE_DB = getenv('TABLE_DB');
 
 
-setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
-date_default_timezone_set('America/Sao_Paulo');
+
 
 //PRODUCAO-LOCAL
 //$conn = new mysqli($L_URL_DB, $L_USER_DB, $L_PASS_DB, $L_TABLE_DB);
